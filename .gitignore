@@ -1,0 +1,28 @@
+
+```gitignore name=.gitignore
+# Django 常用忽略文件
+*.pyc
+__pycache__/
+db.sqlite3
+/static/
+/media/
+
+# 环境/虚拟环境
+env/
+venv/
+ENV/
+*.env
+.env.*
+
+# VSCode 编辑器相关
+.vscode/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 其他依赖
+node_modules/
