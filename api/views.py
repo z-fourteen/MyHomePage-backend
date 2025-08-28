@@ -16,16 +16,29 @@ class UserCreateView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+# views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "is_superuser": user.is_superuser,
+            "email": user.email,
+            # 根据需要添加其他字段
+        })
+
 
 class ThoughtsListCreateView(generics.ListCreateAPIView):
     serializer_class = ThoughtEntrySerializer
 
     def get_queryset(self):
-        """
-        这个方法根据请求类型和用户身份返回不同的查询集。
-        GET 请求: 返回所有公开的日志。
-        POST 请求: 允许登录用户创建日志。
-        """
         # 如果是GET请求，只显示公开的日志
         if self.request.method == 'GET':
             return ThoughtEntry.objects.filter(is_public=True).order_by('-timestamp')
@@ -41,11 +54,10 @@ class ThoughtsListCreateView(generics.ListCreateAPIView):
         if self.request.user.is_authenticated:
             serializer.save(author=self.request.user)
         else:
-            # 如果未认证用户尝试创建，会返回401错误
-            # 这里可以添加更具体的错误处理
-            pass
-            
-    # 如果你希望未登录用户可以查看列表
+            # 如果未认证用户尝试创建，抛出权限拒绝异常
+            raise PermissionDenied("你必须登录才能发布日志。")
+
+    # 未登录用户可以查看列表
     permission_classes = [AllowAny]
 
 
