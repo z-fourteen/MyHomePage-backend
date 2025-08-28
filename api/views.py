@@ -22,7 +22,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 class CurrentUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         user = request.user
@@ -68,7 +68,7 @@ class MessageListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.request.user.username == 'admin':
             return MessageEntry.objects.all().order_by('-timestamp')
-        return MessageEntry.objects.filter(is_public=True).order_by('-date')
+        return MessageEntry.objects.filter(is_public=True).order_by('-timestamp')
     def perform_create(self, serializer):
         # 自动将发送者设置为当前登录用户
         serializer.save(sender=self.request.user)
