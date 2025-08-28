@@ -52,7 +52,7 @@ class MessageListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         if self.request.user.username == 'admin':
-            return MessageEntry.objects.all.order_by('-date')
+            return MessageEntry.objects.all().order_by('-timestamp')
         return MessageEntry.objects.filter(is_public=True).order_by('-date')
     def perform_create(self, serializer):
         # 自动将发送者设置为当前登录用户
