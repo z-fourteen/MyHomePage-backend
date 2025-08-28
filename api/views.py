@@ -4,9 +4,12 @@ from rest_framework import generics
 from .serializers import UserSerializer, ThoughtEntrySerializer, MessageEntrySerializer
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .models import ThoughtEntry, MessageEntry
+from django.http import HttpResponse
 
 # Create your views here.
 
+def home_view(request):
+    return HttpResponse("Welcome to the backend API!")
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
